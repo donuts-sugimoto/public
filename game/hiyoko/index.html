@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>ひよこ飛距離チャレンジ</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #87ceeb, #c8e6c9);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+      color: #1e2d4e;
+    }
+    h1 {
+      font-size: clamp(24px, 5vw, 40px);
+      margin-bottom: 8px;
+      text-shadow: 0 2px 8px rgba(0,0,0,.15);
+    }
+    p {
+      font-size: clamp(13px, 2.5vw, 17px);
+      color: rgba(30,45,78,.65);
+      margin-bottom: 48px;
+    }
+    .btns {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    a {
+      display: block;
+      padding: 18px 48px;
+      border-radius: 16px;
+      font-size: clamp(15px, 3vw, 20px);
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,.2);
+      transition: transform .12s, box-shadow .12s;
+    }
+    a:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,.25); }
+    .btn2d { background: linear-gradient(135deg, #4a90d9, #2260b8); color: #fff; }
+    .btn3d { background: linear-gradient(135deg, #3dba7a, #1e7a4e); color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>🐣 ひよこ飛距離チャレンジ</h1>
+  <p>ひよこを遠くまで飛ばそう！</p>
+  <div class="btns">
+    <a href="hiyoko-flight.html" class="btn2d">▶ 2D版でプレイ</a>
+    <a href="hiyoko-flight-3d.html" class="btn3d">▶ 3D版でプレイ</a>
+  </div>
+</body>
+</html>

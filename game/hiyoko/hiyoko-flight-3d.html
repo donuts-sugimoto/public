@@ -25,27 +25,7 @@ canvas{display:block;width:100%;height:100%;}
 .devBtn3D{cursor:pointer;background:rgba(8,18,50,.75);border:1px solid rgba(100,200,255,.35);color:rgba(150,220,255,.9);border-radius:8px;font-size:12px;padding:4px 10px;font-family:inherit;white-space:nowrap;text-align:center;min-width:110px;pointer-events:auto;}
 .devBtn3D:active{opacity:.65;}
 .devBtn3D.turbo-on{background:rgba(220,80,0,.75);border-color:rgba(255,150,50,.6);color:#FFB86C;}
-/* ---- debug menu ---- */
-#debugMenu{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:99999;display:none;align-items:center;justify-content:center;pointer-events:auto;}
-#debugMenu.open{display:flex;}
-#dbgPanel{background:#161b28;border:2px solid rgba(220,60,60,.55);border-radius:12px;padding:20px 24px;width:min(560px,94vw);font-family:monospace;max-height:90vh;overflow-y:auto;}
-#dbgTitle{color:#ff6868;font-weight:bold;font-size:16px;text-align:center;margin-bottom:10px;border-bottom:1px solid rgba(220,60,60,.28);padding-bottom:8px;}
-#dbgHeader{display:grid;grid-template-columns:1fr 80px 54px 54px 54px 90px;gap:4px;font-size:11px;color:rgba(180,190,210,.5);text-align:center;padding:2px 0 6px;}
-.dbgRow{display:grid;grid-template-columns:1fr 80px 54px 54px 54px 90px;gap:4px;align-items:center;border-top:1px solid rgba(255,255,255,.06);padding:6px 0;}
-.dbgCharName{font-size:13px;text-align:left;}
-.dbgLv{font-size:13px;font-weight:bold;color:#99bbdd;text-align:center;}
-.dbgBtn{cursor:pointer;border-radius:4px;border:none;font-family:monospace;font-size:11px;padding:4px 6px;opacity:.9;}
-.dbgBtn:disabled{opacity:.25;cursor:default;}
-.dbgBtnDn{background:rgba(255,128,128,.27);color:#ff8080;}
-.dbgBtnUp{background:rgba(136,238,136,.27);color:#88ee88;}
-.dbgBtnXp{background:rgba(255,238,102,.27);color:#ffee66;}
-.dbgBtnLk{font-size:10px;white-space:nowrap;}
-.dbgBtnLkOn{background:rgba(255,170,85,.27);color:#ffaa55;}
-.dbgBtnLkOff{background:rgba(85,170,255,.27);color:#55aaff;}
-#dbgFooter{display:flex;gap:12px;margin-top:14px;}
-#dbgReset3D{flex:1;background:rgba(200,40,40,.28);border:1px solid rgba(255,80,80,.4);color:#ff8888;border-radius:6px;padding:8px;cursor:pointer;font-family:monospace;font-size:13px;}
-#dbgClose3D{flex:1;background:rgba(80,80,100,.4);border:1px solid rgba(160,160,200,.3);color:#bbc;border-radius:50px;padding:8px;cursor:pointer;font-family:monospace;font-size:13px;}
-#devBtnTitle{position:absolute;bottom:12px;right:12px;background:rgba(220,60,60,.18);border:1px solid rgba(220,60,60,.45);color:rgba(255,150,150,.8);border-radius:6px;font-size:11px;padding:3px 9px;cursor:pointer;font-family:monospace;pointer-events:auto;}
+
 /* ---- angle / power ---- */
 #angleBox{position:absolute;left:6%;bottom:max(8%,8px);display:none;text-align:center;padding:min(10px,1.5vh) min(22px,3vw);border-color:rgba(255,215,0,.45);}
 #angleBox .lab{font-size:12px;color:rgba(255,220,0,.85);}
@@ -256,19 +236,9 @@ canvas{display:block;width:100%;height:100%;}
     <button class="btn btnBig" id="btnStart">ゲームスタート</button>
     <button class="btn btnBig" id="btnRanking">🏆 ランキング表示</button>
     <button id="bgmToggleBtn" class="btn" style="position:absolute;top:2vmin;right:3vmin;font-size:min(14px,3.5vmin);padding:0.4em 1em;border-radius:999px;opacity:.9;"></button>
-    <button id="devBtnTitle" style="display:none">[DEV]</button>
+    
   </div>
-  <div id="debugMenu">
-    <div id="dbgPanel">
-      <div id="dbgTitle">🛠  DEBUG MENU</div>
-      <div id="dbgHeader"><span>キャラ</span><span>Lv</span><span>Lv-</span><span>Lv+</span><span>XP↑</span><span>解放条件</span></div>
-      <div id="dbgRows"></div>
-      <div id="dbgFooter">
-        <button id="dbgReset3D">全データリセット</button>
-        <button id="dbgClose3D">閉じる</button>
-      </div>
-    </div>
-  </div>
+  
   <div id="charselect" class="screen">
     <div id="csTitle">キャラクター選択</div>
     <div id="csCards"></div>
@@ -2597,44 +2567,7 @@ $('rkRetry').addEventListener('click',()=>{playSE('btn');lastSubmitName3D=null;g
 $('rkToTitle').addEventListener('click',()=>{playSE('btn');lastSubmitName3D=null;showTitle();});
 $('btnRanking').addEventListener('click',async()=>{playSE('btn');$('rkSubmitArea').style.display='none';showScreen('ranking');await fetchRanking3D();});
 
-// ===== DEBUG MENU =====
-function buildDebugMenu(){
-  const container=$('dbgRows');
-  container.innerHTML='';
-  CHARS.forEach((ch,ci)=>{
-    const cd=saveData.chars[ch.id];
-    const row=document.createElement('div');
-    row.className='dbgRow';
-    const nameSpan=document.createElement('span');
-    nameSpan.className='dbgCharName';
-    nameSpan.style.color=cd.unlocked?ch.css:'rgba(110,120,140,.55)';
-    nameSpan.textContent=(cd.unlocked?'':'🔒 ')+ch.name;
-    const lvSpan=document.createElement('span');
-    lvSpan.className='dbgLv';
-    lvSpan.textContent='Lv.'+cd.level+(cd.level>=MAX_LEVEL?' MAX':'');
-    const mkBtn=(label,cls,disabled,onClick)=>{
-      const b=document.createElement('button');
-      b.className='dbgBtn '+cls;b.textContent=label;b.disabled=disabled;
-      if(!disabled)b.addEventListener('click',()=>{onClick();buildDebugMenu();});
-      return b;
-    };
-    const btnDn=mkBtn('Lv-','dbgBtnDn',cd.level<=1,()=>{cd.level--;cd.xp=0;writeSave();});
-    const btnUp=mkBtn('Lv+','dbgBtnUp',cd.level>=MAX_LEVEL,()=>{cd.level++;cd.xp=0;writeSave();});
-    const btnXp=mkBtn('XP++','dbgBtnXp',cd.level>=MAX_LEVEL,()=>{cd.xp=xpForNext(cd.level)-1;writeSave();});
-    const isLocked=!cd.unlocked;
-    const btnLk=mkBtn(isLocked?'🔓解放':'🔒非解放','dbgBtn '+(isLocked?'dbgBtnLkOff':'dbgBtnLkOn'),ci===0,()=>{cd.unlocked=!cd.unlocked;writeSave();});
-    row.append(nameSpan,lvSpan,btnDn,btnUp,btnXp,btnLk);
-    container.appendChild(row);
-  });
-}
-function openDebugMenu(){buildDebugMenu();$('debugMenu').classList.add('open');}
-function closeDebugMenu(){$('debugMenu').classList.remove('open');}
-$('devBtnTitle').addEventListener('click',(e)=>{e.stopPropagation();openDebugMenu();});
-$('dbgClose3D').addEventListener('click',()=>{closeDebugMenu();});
-$('dbgReset3D').addEventListener('click',()=>{
-  saveData={playerName:'',chars:{hiyoko:{level:1,xp:0,unlocked:true},debu:{level:1,xp:0,unlocked:false},slim:{level:1,xp:0,unlocked:false},tamagoppi:{level:1,xp:0,unlocked:false}},selectedChar:'hiyoko',totalPlays:0,bestScore:0,bgmOn:true};
-  curChar=CHARS[0];writeSave();closeDebugMenu();
-});
+
 
 // dev buttons
 function skipGame3D(){

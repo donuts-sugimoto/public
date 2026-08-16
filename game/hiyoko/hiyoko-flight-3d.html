@@ -650,6 +650,31 @@ function _bgmLaunch(vOffset){const ac=_getAC();["ground","space","heaven"].forEa
 function _bgmSet(zone){if(!_bgmSrcs.ground)_bgmLaunch(0);if(_bgmZone===zone)return;const ac=_getAC(),t=ac.currentTime;["ground","space","heaven"].forEach(z=>{const g=_bgmGains[z].gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.linearRampToValueAtTime(z===zone?1:0,t+0.5);});_bgmZone=zone;}
 function startBGM(zone){if(!_bgmReady){_bgmLoad().then(()=>_bgmSet(zone)).catch(e=>console.warn("BGM load error",e));return;}_bgmSet(zone);}
 function stopBGM(){["ground","space","heaven"].forEach(z=>{if(_bgmSrcs[z]){try{_bgmSrcs[z].stop();}catch(e){} _bgmSrcs[z]=null;}if(_bgmGains[z]){_bgmGains[z].disconnect();_bgmGains[z]=null;}});_bgmZone=null;}
+let _resultBgmBuf=null,_resultBgmSrc=null;
+function playResultBGM(){
+  if(!saveData.bgmOn)return;
+  stopResultBGM();
+  const ac=_getAC();
+  if(ac.state==='suspended')ac.resume();
+  if(_resultBgmBuf){
+    _resultBgmSrc=ac.createBufferSource();
+    _resultBgmSrc.buffer=_resultBgmBuf;
+    _resultBgmSrc.loop=true;
+    _resultBgmSrc.connect(ac.destination);
+    _resultBgmSrc.start();
+  }else{
+    fetch('sound/bgm_result.mp3').then(r=>r.arrayBuffer()).then(ab=>ac.decodeAudioData(ab)).then(buf=>{
+      _resultBgmBuf=buf;
+      if(!saveData.bgmOn)return;
+      _resultBgmSrc=ac.createBufferSource();
+      _resultBgmSrc.buffer=buf;
+      _resultBgmSrc.loop=true;
+      _resultBgmSrc.connect(ac.destination);
+      _resultBgmSrc.start();
+    }).catch(e=>console.warn('result BGM load error',e));
+  }
+}
+function stopResultBGM(){if(_resultBgmSrc){try{_resultBgmSrc.stop();}catch(e){}_resultBgmSrc=null;}}
 
 /* ================= THREE SETUP ================= */
 const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
@@ -1855,7 +1880,7 @@ function reset(){
   spawnChick();
   genItems();
 }
-function go(){
+function go(){stopResultBGM();
   hideScreens();reset();
   turboMode=false;$('btnTurbo3D').textContent='⚡ 10倍速OFF';$('btnTurbo3D').classList.remove('turbo-on');
   state='angle';af=0;
@@ -2057,7 +2082,7 @@ function updPhys(){
       state='gameover';
       ui.tapHint.style.display='none';
       boom(ball.x*K,.3,0,20,0xffe080,.1,2,{g:.01});
-      setTimeout(()=>{fillGameOver();showScreen('gameover');
+      setTimeout(()=>{stopBGM();playResultBGM();fillGameOver();showScreen('gameover');
         G.fromTo($('goCard'),{scale:.7,opacity:0,y:60},{scale:1,opacity:1,y:0,duration:.5,ease:'back.out(1.6)'});
       },700);
     }
@@ -2628,7 +2653,7 @@ $('btnTurbo3D').addEventListener('click',()=>{
 });
 $('btnSkip3D').addEventListener('click',()=>{skipGame3D();});
 $('unClose').addEventListener('click',()=>{ui.unlock.style.display='none';});
-function showTitle(){
+function showTitle(){stopResultBGM();
   reset();state='title';
   showScreen('title');
   ui.hud.style.display='none';

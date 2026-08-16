@@ -75,7 +75,8 @@ canvas{display:block;width:100%;height:100%;}
 #zoneBanner{position:absolute;left:50%;top:22%;transform:translate(-50%,-50%) scale(.6);opacity:0;font-size:min(52px,7vw);font-weight:bold;letter-spacing:.12em;color:#fff;text-shadow:0 0 24px rgba(120,200,255,.9),0 3px 8px #000;white-space:nowrap;}
 /* ---- panels ---- */
 .screen{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;pointer-events:auto;}
-#loading{display:flex;background:#05050f;color:#ffdc50;font-size:22px;font-weight:bold;z-index:50;}
+#loading{display:flex;background:#05050f;color:#FFE040;font-family:'Hiragino Sans','Meiryo',sans-serif;font-size:min(22px,3.5vw);flex-direction:column;gap:10px;z-index:50;animation:ldPulse 1.2s ease-in-out infinite;}
+@keyframes ldPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 #title{background:rgba(0,0,20,.45);}
 #titleLogo{text-align:center;margin-bottom:min(18vh,8px);}
 #titleLogoImg{max-width:min(680px,78vw);height:auto;display:block;margin:0 auto 2px;}
@@ -350,7 +351,7 @@ canvas{display:block;width:100%;height:100%;}
       <button class="btn" id="unClose">閉じる</button>
     </div>
   </div>
-  <div id="loading" class="screen">ひよこ準備中…</div>
+  <div id="loading" class="screen"><div style="font-size:min(52px,8vw);">🐣</div><div>読み込み中...</div></div>
 </div>
 <script type="module">
 import * as THREE from 'three';

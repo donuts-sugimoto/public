@@ -2082,7 +2082,8 @@ function updPhys(){
       state='gameover';
       ui.tapHint.style.display='none';
       boom(ball.x*K,.3,0,20,0xffe080,.1,2,{g:.01});
-      setTimeout(()=>{stopBGM();playResultBGM();fillGameOver();showScreen('gameover');
+      stopBGM();playResultBGM();
+      setTimeout(()=>{fillGameOver();showScreen('gameover');
         G.fromTo($('goCard'),{scale:.7,opacity:0,y:60},{scale:1,opacity:1,y:0,duration:.5,ease:'back.out(1.6)'});
       },700);
     }

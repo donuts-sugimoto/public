@@ -220,7 +220,7 @@ canvas{display:block;width:100%;height:100%;}
     <div class="hudRow glass" id="hudAltRow"><div class="lab">高度</div><div class="val" id="hudAlt">0 m</div></div>
     <div id="devBtns3D">
       <button class="devBtn3D" id="btnTurbo3D">⚡ 10倍速OFF</button>
-      <button class="devBtn3D" id="btnSkip3D">⏭ スキップ</button>
+      
     </div>
   </div>
   <div id="angleBox" class="glass"><div class="lab">① 角度を決めよう！タップで決定！</div><div class="val" id="angVal">45°</div></div>
@@ -2586,7 +2586,7 @@ $('btnTurbo3D').addEventListener('click',()=>{
   $('btnTurbo3D').textContent='⚡ 10倍速'+(turboMode?'ON':'OFF');
   $('btnTurbo3D').classList.toggle('turbo-on',turboMode);
 });
-$('btnSkip3D').addEventListener('click',()=>{skipGame3D();});
+
 $('unClose').addEventListener('click',()=>{ui.unlock.style.display='none';});
 function showTitle(){stopResultBGM();
   reset();state='title';

@@ -241,6 +241,7 @@ canvas{display:block;width:100%;height:100%;}
     </div>
     <button id="bgmToggleBtn" class="btn" style="position:absolute;top:2vmin;right:3vmin;font-size:min(14px,3.5vmin);padding:0.4em 1em;border-radius:999px;opacity:.9;"></button>
     
+    
   </div>
   
   <div id="charselect" class="screen">
@@ -2540,6 +2541,7 @@ $('bgmToggleBtn').addEventListener('click',()=>{
   saveData.bgmOn=!saveData.bgmOn;writeSave();_updateBgmBtn();
   if(!saveData.bgmOn)stopBGM();
 });
+
 $('btnStart').addEventListener('click',()=>{
   if(!_seReady)_seLoad().catch(()=>{});
   if(!_bgmReady&&saveData.bgmOn)_bgmLoad().catch(()=>{});

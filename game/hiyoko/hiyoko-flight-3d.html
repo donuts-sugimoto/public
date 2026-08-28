@@ -302,7 +302,7 @@ canvas{display:block;width:100%;height:100%;}
   </div>
   <div id="ranking" class="screen">
     <div id="rkCard">
-      <div id="rkTitle">ランキング TOP10</div>
+      <div id="rkTitle">ランキング TOP100</div>
       <div id="rkSubmitArea">
         <input type="text" id="rkNameInput" placeholder="名前を入力（最大16字）" maxlength="16">
         <button id="rkSubmitBtn">📤 記録を送信</button>
@@ -1699,7 +1699,7 @@ async function doSubmitScore3D(name){
     const r=await fetch(GAS_URL,{method:'POST',body:JSON.stringify({name,score:scoreSnap,char:saveData.selectedChar||'hiyoko',mode:'3D',token:SUBMIT_TOKEN})});
     const d=await r.json();
     rankingData=d.ranking||[];
-    playerRank=typeof d.rank==='number'&&d.rank>=1&&d.rank<=10?d.rank-1:-1;
+    playerRank=typeof d.rank==='number'&&d.rank>=1&&d.rank<=100?d.rank-1:-1;
     if(d.ok){mySubmittedEntry={name,score:scoreSnap,char:saveData.selectedChar||'hiyoko',mode:'3D',rank:d.rank};lastSubmitName3D=null;}
     if(!d.ok&&d.error)rankingMsg='GASエラー: '+d.error;
   }catch(e){rankingData=[];rankingMsg='通信エラー';}
@@ -1732,7 +1732,7 @@ function renderRankingList(){
   }
   const medals=['🥇','🥈','🥉'];
   const RANKS_MAP=Object.fromEntries(RANKS.map(r=>[r.label,r]));
-  let _html=rankingData.slice(0,10).map((row,i)=>{
+  let _html=rankingData.slice(0,100).map((row,i)=>{
     const isMe=playerRank>=0&&i===playerRank;
     const rk=RANKS.find(r=>Number(row.score||0)>=r.min)||RANKS[RANKS.length-1];
     const charId=row.char||'hiyoko';
